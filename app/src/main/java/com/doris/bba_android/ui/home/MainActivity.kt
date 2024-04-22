@@ -1,4 +1,4 @@
-package com.doris.bba_android.ui
+package com.doris.bba_android.ui.home
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

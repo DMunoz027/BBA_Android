@@ -11,6 +11,10 @@ import com.doris.bba_android.model.request.LoginRequest
 import com.doris.bba_android.model.response.UserResponse
 import com.doris.bba_android.network.auth.AuthFirebaseManager
 import com.doris.bba_android.ui.common.DialogUi
+import com.doris.bba_android.ui.home.HomeActivity
+import com.doris.bba_android.utils.Constants.Companion.STATUS_ERROR
+import com.doris.bba_android.utils.Constants.Companion.STATUS_LOADING
+import com.doris.bba_android.utils.Constants.Companion.STATUS_SUCCESS
 
 
 class LoginActivity : AppCompatActivity() {
@@ -46,7 +50,9 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun initLogin() {
         authManager = AuthFirebaseManager()
-        val loginRequest = LoginRequest("doris@gmail.com", "12345678")
+        val email = binding.txtEmailUser.text.toString()
+        val password = binding.txtPassUser.text.toString()
+        val loginRequest = LoginRequest(email, password)
         setupAlert(1)
         authManager
             .loginWithEmailAndPassword(loginRequest) { user ->
@@ -78,29 +84,34 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun setupAlert(case: Int) {
         when (case) {
-            1 -> {
+            STATUS_LOADING -> {
                 _dialog = DialogUi(
                     this,
                     R.raw.anim_loading,
                     R.string.loading_hint,
                     R.string.message_process_information
-                ) { _dialog.dismiss() }
+                ) {
+                }
                 _dialog.show()
             }
 
-            2 -> {
+            STATUS_SUCCESS -> {
                 _dialog = DialogUi(
                     this,
                     R.raw.anim_success,
                     R.string.success_hint,
                     R.string.message_success,
                     2
-                ) { _dialog.cancel() }
+                ) {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
                 _dialog.show()
 
             }
 
-            3 -> {
+            STATUS_ERROR -> {
                 _dialog = DialogUi(
                     this,
                     R.raw.anim_error,

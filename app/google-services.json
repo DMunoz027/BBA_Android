@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1053244963396",
-    "project_id": "appbba-315e6",
-    "storage_bucket": "appbba-315e6.appspot.com"
+    "project_number": "269078960041",
+    "project_id": "bbaapplicaction",
+    "storage_bucket": "bbaapplicaction.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1053244963396:android:a2318903c5f42f63775a11",
+        "mobilesdk_app_id": "1:269078960041:android:000fbc29ece28b2b6a16b8",
         "android_client_info": {
           "package_name": "com.doris.bba_android"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBG2vi3QxdMLcvVEoe2O3q56LuMjU-VHe4"
+          "current_key": "AIzaSyALh2Osf62LEhtbTN4uvslNkDBa8cWj5Jo"
         }
       ],
       "services": {
