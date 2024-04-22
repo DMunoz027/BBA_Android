@@ -1,0 +1,41 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">BBA_Android</string>
+
+    <!-- text shared views -->
+    <string name="acronym_app_name">BBA</string>
+    <string name="large_app_name">Baby Blooms Again</string>
+    <string name="error_hint" tools:ignore="TypographyEllipsis">Error</string>
+    <string name="loading_hint" tools:ignore="TypographyEllipsis">Cargando ...</string>
+    <string name="message_error" tools:ignore="TypographyEllipsis">Ocurrio un error, por favor vueleve a intentarlo.\nSi el error persiste comunicate con soporte.</string>
+    <string name="success_hint" tools:ignore="TypographyEllipsis">Solicitud exitosa!</string>
+    <string name="message_success">Solicitud exitosa, hemos procesado su solicitud con exito.</string>
+    <string name="arrow_back">arrow_back</string>
+    <string name="continue_action">Continuar</string>
+    <string name="try_again">Intentar de nuevo</string>
+
+    <!-- text for splash view -->
+    <string name="message_splash">Donde hay amor,\nhay cuidado.\nDonde hay cuidado,\nesta BBA</string>
+
+    <!-- text for decide action view -->
+    <string name="message_decide_action">Bienvenido(a), </string>
+    <string name="already_account">Ya tengo cuenta</string>
+    <string name="not_account_yet">Aun no tengo cuenta</string>
+
+    <!-- text for login view -->
+    <string name="sign_in">Iniciar session</string>
+    <string name="sign_up">Registrarme</string>
+    <string name="forgot_password">Olvide mi contraseña</string>
+    <string name="password_hint">********</string>
+    <string name="password">Contraseña</string>
+    <string name="email_hint">my_email@gmail.com</string>
+    <string name="email">Correo electronico</string>
+    <string name="message_login">Por favor ingrese su usuario y\nsu contraseña para acceder con su\ncuenta</string>
+
+
+    <!-- text for register view -->
+    <string name="message_register">Por favor ingrese sus datos para\ncrear una nueva cuenta</string>
+    <string name="name">Nombre</string>
+    <string name="name_hint">Doris</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="message_process_information">Estamos procesando su información.\nPor favor espere un momento</string>
+</resources>
