@@ -47,16 +47,17 @@ class SharedPreferencesManager(private val context: Context) {
      * @param value: Es el valor por defecto que se devolvera en caso de que no exista,
      * tambien sirve para poder identificar que tipo de dato es el que se desea recuperar
      */
-    fun getPref(key: String, value: Any) {
-        when (value) {
-            is String -> sharedPreferences.getString(key, value)
+    fun getPref(key: String, value: Any): Any {
+        return when (value) {
+            is String -> sharedPreferences.getString(key, value) ?: value
             is Int -> sharedPreferences.getInt(key, value)
             is Boolean -> sharedPreferences.getBoolean(key, value)
             is Float -> sharedPreferences.getFloat(key, value)
             is Long -> sharedPreferences.getLong(key, value)
-            else -> throw IllegalArgumentException("Ocurrio un error obteniendo la preferencia")
+            else -> throw IllegalArgumentException("Tipo de dato no soportado")
         }
     }
+
 
     /**
      * Remove pref

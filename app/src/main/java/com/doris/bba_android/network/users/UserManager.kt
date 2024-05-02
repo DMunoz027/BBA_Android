@@ -1,11 +1,7 @@
 package com.doris.bba_android.network.users
 
-import com.doris.bba_android.model.request.RegisterRequest
-import com.doris.bba_android.model.response.UserResponse
-import com.doris.bba_android.utils.Constants.Companion.STATUS_ERROR
-import com.doris.bba_android.utils.Constants.Companion.STATUS_ERROR_NETWORK
+import com.doris.bba_android.model.UserModel
 import com.doris.bba_android.utils.Constants.Companion.STATUS_LOADING
-import com.doris.bba_android.utils.Constants.Companion.STATUS_SUCCESS
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -13,42 +9,71 @@ class UserManager {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val nameColl = "users_system"
 
-    fun saveUserColl(data: RegisterRequest): Int {
-        var resultRes = STATUS_LOADING
+    /**
+     * Save user coll
+     * Esta funcion sirve para alamacenar la información basica de un usuario, por defecto se le agrega el rol
+     * default, por que se crea un usuario normal
+     * @param data: es la informacion que se va a alamacenar
+     * @param resultResponse: es la respuesta para saber si se almaceno o no se almaceno el usuario
+     * @receiver
+     */
+    fun saveUserColl(data: UserModel, resultResponse: (Boolean) -> Unit) {
+
         db.collection(nameColl)
             .add(data)
             .addOnCompleteListener { result ->
-                resultRes = if (result.isSuccessful) {
-                    STATUS_SUCCESS
+                if (result.isSuccessful) {
+                    resultResponse(true)
                 } else {
-                    STATUS_ERROR
+                    resultResponse(false)
                 }
+
             }.addOnFailureListener {
-                resultRes = STATUS_ERROR_NETWORK
+                resultResponse(false)
             }
-        return resultRes
     }
 
-    suspend fun getAllUsersColl(): List<UserResponse> {
-        val listUsers: MutableList<UserResponse> = mutableListOf()
+    suspend fun getAllUsersColl(): List<UserModel> {
+        val listUserModels: MutableList<UserModel> = mutableListOf()
 
-        try {
-            val snapshot = db.collection(nameColl).get().await()
-            for (doc in snapshot.documents) {
-                val userData = doc.toObject(UserResponse::class.java)
-                if (userData != null) {
-                    listUsers.add(userData)
-                }
+
+        val snapshot = db.collection(nameColl).get().await()
+        for (doc in snapshot.documents) {
+            val userModelData = doc.toObject(UserModel::class.java)
+            if (userModelData != null) {
+                listUserModels.add(userModelData)
             }
-        } catch (e: Exception) {
-            //
         }
 
-        return listUsers
+        return listUserModels
     }
 
-    fun getOneUserColl() {
+    /**
+     * Get one user coll
+     * Esta funcion sirve para obtener la infortmacin de un usuario en especifico
+     * devuelve la informacion del usuario en caso de existir o un null en caso de no existir dicho usuario
+     * @param userId: es el Id del usuario que se deseaa cosnultar
+     * @param callback: es la informacion del usuario o null segun corresponda
+     * @receiver
+     */
+    fun getOneUserColl(userId: String, callback: (UserModel?) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+        val collRef = db.collection(nameColl)
 
+        collRef.whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val documentSnapshot = querySnapshot.documents[0]
+                    val userModel = documentSnapshot.toObject(UserModel::class.java)
+                    callback(userModel)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
     }
 
     fun deleteOneUserColl(): Int {

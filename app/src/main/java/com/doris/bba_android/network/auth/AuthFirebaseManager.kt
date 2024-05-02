@@ -2,13 +2,10 @@ package com.doris.bba_android.network.auth
 
 import com.doris.bba_android.model.request.LoginRequest
 import com.doris.bba_android.model.request.RegisterRequest
-import com.doris.bba_android.model.response.UserResponse
+import com.doris.bba_android.model.UserModel
 import com.google.android.gms.tasks.Task
-import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import java.util.concurrent.CompletableFuture
 
 /**
  * Auth firebase manager
@@ -29,21 +26,19 @@ class AuthFirebaseManager {
      * @param completion: Es el resultado de
      * @return
      */
-    fun loginWithEmailAndPassword(data: LoginRequest, completion: (UserResponse?) -> Unit) {
+    fun loginWithEmailAndPassword(data: LoginRequest, completion: (UserModel?) -> Unit) {
         auth.signInWithEmailAndPassword(data.user, data.password)
             .addOnCompleteListener { task: Task<AuthResult> ->
                 if (task.isSuccessful) {
                     val user = task.result?.user
-                    val userResponse = UserResponse(
+                    val userModelResponse = UserModel(
                         userId = user?.uid ?: "",
                         userName = user?.displayName ?: "",
                         userEmail = user?.email ?: "",
                         userVerified = user?.isEmailVerified ?: false,
-                        userPhone = user?.phoneNumber ?: "",
-                        userAddress = "Null",
                         userToken = user?.getIdToken(false)?.result?.token ?: ""
                     )
-                    completion(userResponse)
+                    completion(userModelResponse)
                 } else {
                     completion(null)
                 }
@@ -58,14 +53,12 @@ class AuthFirebaseManager {
      * @param data: Es la dataClass que se crea en los modelos, en la carpeta de request (Solicitud)
      * @return
      */
-    fun registerWithEmailAndPassword(data: RegisterRequest): CompletableFuture<UserResponse> {
-        val future = CompletableFuture<UserResponse>()
-
+    fun registerWithEmailAndPassword(data: RegisterRequest, completion: (UserModel?) -> Unit) {
         auth.createUserWithEmailAndPassword(data.userEmail, data.userPassword)
             .addOnCompleteListener { task: Task<AuthResult> ->
                 if (task.isSuccessful) {
                     val user = task.result!!.user
-                    val userResponse = UserResponse(
+                    val userModelResponse = UserModel(
                         userId = user?.uid ?: "",
                         userName = user?.displayName ?: "",
                         userEmail = user?.email ?: "",
@@ -74,13 +67,11 @@ class AuthFirebaseManager {
                         userAddress = "Null",
                         userToken = user?.getIdToken(false)?.result?.token ?: ""
                     )
-                    future.complete(userResponse)
+                    completion(userModelResponse)
                 } else {
-                    future.completeExceptionally(task.exception ?: Exception("Unknown error"))
+                    completion(null)
                 }
             }
-
-        return future
     }
 
     /**

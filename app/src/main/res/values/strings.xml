@@ -38,4 +38,10 @@
     <string name="name_hint">Doris</string>
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="message_process_information">Estamos procesando su información.\nPor favor espere un momento</string>
+    <string name="title_activity_home_user">HomeUserActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="events">Eventos</string>
+    <string name="profile">Perfil</string>
 </resources>

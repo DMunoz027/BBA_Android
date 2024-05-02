@@ -6,20 +6,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.doris.bba_android.ui.auth.DecideActionAuthActivity
+import com.doris.bba_android.ui.home.HomeUserActivity
+import com.doris.bba_android.utils.SharedPreferencesManager
 
-/**
- * Splash screen activity
- *
- * @constructor Create empty Splash screen activity
- */
+
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
+    private lateinit var _storeManager: SharedPreferencesManager
+    private val storeManager get() = _storeManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
+        _storeManager = SharedPreferencesManager(this)
         initUi()
 
     }
@@ -32,11 +34,23 @@ class SplashScreenActivity : AppCompatActivity() {
      * Handle splash
      * Muestra la vista Splash por un determinado tiempo
      * Haciendo uso de un Lopper que dura 3.5 segundos(3500 milisegundos)
+     * Se valida la sesion del usuario para evitar volver al login y ademas de eso
+     * se valida el rol del usaurio que ha iniciado sesion
      */
     private fun handleSplash() {
         Looper.myLooper()?.let {
             Handler(it).postDelayed({
-                jumpNextActivity(activity = DecideActionAuthActivity())
+                val sessionActive = storeManager.getPref("sessionState", false) as Boolean
+                if (sessionActive) {
+                    val roleUser = storeManager.getPref("roleUser", "").toString()
+                    if (roleUser == "default") {
+                        jumpNextActivity(activity = HomeUserActivity())
+                    } else {
+                        jumpNextActivity(activity = DecideActionAuthActivity())
+                    }
+                } else {
+                    jumpNextActivity(activity = DecideActionAuthActivity())
+                }
             }, 3500)
         }
     }
