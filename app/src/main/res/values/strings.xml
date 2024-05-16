@@ -28,7 +28,7 @@
     <string name="password_hint">********</string>
     <string name="password">Contraseña</string>
     <string name="email_hint">my_email@gmail.com</string>
-    <string name="email">Correo electronico</string>
+    <string name="email">Correo electrónico</string>
     <string name="message_login">Por favor ingrese su usuario y\nsu contraseña para acceder con su\ncuenta</string>
 
 
@@ -44,4 +44,53 @@
     <string name="title_notifications">Notifications</string>
     <string name="events">Eventos</string>
     <string name="profile">Perfil</string>
+    <string name="my_data">Mis datos</string>
+    <string name="photo_profile">photo_profile</string>
+    <string name="my_profile">Mi perfil</string>
+    <string name="edit">edit</string>
+    <string name="edit_text">Editar</string>
+
+    <!-- text for manage profile view -->
+    <string name="manager_info_baby">Gestionar informacion de mi bebé</string>
+    <string name="arrow_next">arrow next</string>
+    <string name="my_information">Mi información</string>
+    <string name="full_name">Nombre completo</string>
+    <string name="phone">Teléfono</string>
+    <string name="address">Dirección</string>
+    <string name="danger">Genero</string>
+    <string name="date_birth">Fecha nacimiento</string>
+    <string name="information_of_my_babys">Información de mi(s) niño(s)</string>
+    <string name="register">Registrar</string>
+    <string name="blood_type">Tipo de sangre</string>
+    <string name="photo_baby">photo baby</string>
+    <string name="view_detail">view detail</string>
+
+    <!-- text for manage register baby view -->
+    <string name="register_information">Registrar información</string>
+    <string name="pick_photo">pick photo</string>
+    <string name="upload_photography">Subir fotografía</string>
+    <string name="age">Edad</string>
+    <string name="birth_weight">Peso al nacer (grs)</string>
+    <string name="birth_size">Altura al nacer (cm)</string>
+    <string name="weight_current">Peso actual (kg)</string>
+    <string name="size_current_cm">Altura actual</string>
+    <string name="gender">Genero</string>
+    <string name="text_select_camera_or_gallery">Seleccione el medio por el cuál deseas cargar la fotografia.</string>
+    <string name="camera">Camara</string>
+    <string name="gallery">Galeria</string>
+    <string name="from_gallery">Desde Galeria</string>
+    <string name="from_camera">Desde Camara</string>
+    <string name="verify_email">Correo verificado</string>
+
+    <string-array name="genders">
+        <item>Masculino</item>
+        <item>Femenino</item>
+    </string-array>
+
+    <string-array name="blood_types">
+        <item>AB+</item>
+        <item>AB-</item>
+        <item>0+</item>
+        <item>0-</item>
+    </string-array>
 </resources>

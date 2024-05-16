@@ -57,14 +57,19 @@ dependencies {
      * Dependencias de diseño
      */
     implementation("com.airbnb.android:lottie:6.1.0")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    implementation("com.squareup.picasso:picasso:2.71828")
+
     /**
      * Dependecias de firebase
      * 1: Authentication
      * 2: Firebase Firestore
+     * 3: Firebase Storage
      */
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore:24.11.1")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
 
 }
