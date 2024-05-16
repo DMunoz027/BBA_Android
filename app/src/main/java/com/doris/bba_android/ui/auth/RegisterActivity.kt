@@ -16,7 +16,8 @@ import com.doris.bba_android.utils.Constants
 class RegisterActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityRegisterBinding
     private val binding get() = _binding
-    private lateinit var _dialog: DialogUi
+    private var _dialog: DialogUi? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +119,7 @@ class RegisterActivity : AppCompatActivity() {
                     userEmail = binding.txtEmailUser.text.toString(),
                     userPassword = binding.txtPassUser.text.toString(),
                 )
-                showAlertState(Constants.STATUS_LOADING)
+                showAlertState(Constants.STATUS_LOADING) {}
 
                 authManger.registerWithEmailAndPassword(data) { userResponse ->
                     if (userResponse != null) {
@@ -127,19 +128,27 @@ class RegisterActivity : AppCompatActivity() {
                         userResponse.userRole = "default"
                         userManager.saveUserColl(userResponse) {
                             if (it) {
-                                showAlertState(Constants.STATUS_SUCCESS)
+                                showAlertState(Constants.STATUS_SUCCESS) {
+                                    jumpNextActivity(LoginActivity())
+                                }
                             } else {
-                                showAlertState(Constants.STATUS_ERROR)
+                                showAlertState(Constants.STATUS_ERROR) {
+                                    _dialog?.dismissAlert()
+                                }
                             }
                         }
 
                     } else {
-                        showAlertState(Constants.STATUS_ERROR)
+                        showAlertState(Constants.STATUS_ERROR) {
+                            _dialog?.dismissAlert()
+                        }
                     }
                 }
 
             } catch (error: Exception) {
-                showAlertState(Constants.STATUS_ERROR)
+                showAlertState(Constants.STATUS_ERROR) {
+                    _dialog?.dismissAlert()
+                }
             }
         }
     }
@@ -162,47 +171,39 @@ class RegisterActivity : AppCompatActivity() {
      *
      * @param case: Es el parametro que se va a evaluar (1,2,3...)
      */
-    private fun showAlertState(case: Int) {
+    private fun showAlertState(case: Int, action: () -> Unit) {
+        if (_dialog == null) {
+            _dialog = DialogUi(this)
+        }
+
         when (case) {
             Constants.STATUS_LOADING -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_loading,
                     R.string.loading_hint,
-                    R.string.message_process_information
-                ) {}
-                _dialog.show()
+                    R.string.message_process_information,
+                    actionCode = 1
+                )
             }
 
             Constants.STATUS_SUCCESS -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_success,
                     R.string.success_hint,
                     R.string.message_success,
-                    Constants.STATUS_SUCCESS
-                ) {
-                    jumpNextActivity(LoginActivity())
-                    _dialog.cancel()
-                    _dialog.dismiss()
-                }
-                _dialog.show()
+                    actionCode = 1
+                )
             }
 
             Constants.STATUS_ERROR -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_error,
                     R.string.error_hint,
                     R.string.message_error,
-                    Constants.STATUS_ERROR
-                ) {
-                    _dialog.cancel()
-                    _dialog.dismiss()
-                }
-                _dialog.show()
+                    actionCode = 1
+                )
             }
-
         }
+        _dialog?.show(action)
     }
 }

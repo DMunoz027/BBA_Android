@@ -20,7 +20,7 @@ import com.doris.bba_android.utils.SharedPreferencesManager
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var _binding: ActivityLoginBinding
-    private lateinit var _dialog: DialogUi
+    private var _dialog: DialogUi? = null
     private val binding get() = _binding
     private lateinit var authManager: AuthFirebaseManager
     private lateinit var _storePrefs: SharedPreferencesManager
@@ -55,24 +55,27 @@ class LoginActivity : AppCompatActivity() {
         val email = binding.txtEmailUser.text.toString()
         val password = binding.txtPassUser.text.toString()
         val loginRequest = LoginRequest(email, password)
-        setupAlert(STATUS_LOADING)
+        setupAlert(STATUS_LOADING) {}
         authManager
             .loginWithEmailAndPassword(loginRequest) { user ->
                 if (user?.userId != null) {
                     val userManager = UserManager()
                     userManager.getOneUserColl(user.userId!!) {
-                        Toast.makeText(this, "${it?.userRole}", Toast.LENGTH_SHORT).show()
 
                         storePrefs.savePref("sessionState", true)
                         it?.userRole?.let { role ->
                             storePrefs.savePref("roleUser", role)
-                            Toast.makeText(this, role, Toast.LENGTH_SHORT).show()
                         }
                         it?.userId?.let { id -> storePrefs.savePref("idUser", id) }
-                        setupAlert(STATUS_SUCCESS)
+
+                        setupAlert(STATUS_SUCCESS) {
+                            jumpNextActivity(HomeUserActivity())
+                        }
                     }
                 } else {
-                    setupAlert(STATUS_ERROR)
+                    setupAlert(STATUS_ERROR) {
+                        _dialog?.dismissAlert()
+                    }
                 }
             }
     }
@@ -95,53 +98,40 @@ class LoginActivity : AppCompatActivity() {
      *
      * @param case: Es el parametro que se va a evaluar (1,2,3...)
      */
-    private fun setupAlert(case: Int) {
+    private fun setupAlert(case: Int, action: () -> Unit) {
+        if (_dialog == null) {
+            _dialog = DialogUi(this)
+        }
+
         when (case) {
             STATUS_LOADING -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_loading,
                     R.string.loading_hint,
-                    R.string.message_process_information
-                ) {}
-
-                _dialog.show()
+                    R.string.message_process_information,
+                    actionCode = 1
+                )
             }
 
             STATUS_SUCCESS -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_success,
                     R.string.success_hint,
                     R.string.message_success,
-                    STATUS_SUCCESS
-                ) {
-                    val intent = Intent(this, HomeUserActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    _dialog.dismiss()
-                    _dialog.cancel()
-
-                }
-                _dialog.show()
-
+                    actionCode = 1
+                )
             }
 
             STATUS_ERROR -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_error,
                     R.string.error_hint,
                     R.string.message_error,
-                    STATUS_ERROR
-                ) {
-                    _dialog.cancel()
-                    initLogin()
-                }
-                _dialog.show()
+                    actionCode = 1
+                )
             }
-
         }
+        _dialog?.show(action)
     }
 
 }

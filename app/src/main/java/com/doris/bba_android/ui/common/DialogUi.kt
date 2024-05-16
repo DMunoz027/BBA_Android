@@ -9,44 +9,52 @@ import com.doris.bba_android.R
 import com.doris.bba_android.databinding.LayoutAlertLoadingBinding
 
 class DialogUi(
-    context: Context,
-    private val anim: Int,
-    private val title: Int,
-    private val message: Int,
-    private val actionCode: Int = 1,
-    private val handleNextAction: () -> Unit
+    context: Context
 ) : Dialog(context, R.style.TransparentDialog) {
-    private lateinit var binding: LayoutAlertLoadingBinding
+    private lateinit var _binding: LayoutAlertLoadingBinding
+    private lateinit var binding2: LayoutAlertLoadingBinding
+    private val binding get() = _binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = LayoutAlertLoadingBinding.inflate(LayoutInflater.from(context))
-        setContentView(binding.root)
-        binding.animLottie.setAnimation(anim)
-        binding.titleAlert.text = context.getString(title)
-        binding.messageAlert.text = context.getString(message)
+        _binding = LayoutAlertLoadingBinding.inflate(LayoutInflater.from(context))
+        setContentView(_binding.root)
+    }
+
+    fun update(anim: Int, title: Int, message: Int, actionCode: Int) {
+        binding2 = LayoutAlertLoadingBinding.inflate(LayoutInflater.from(context))
+        binding2.animLottie.setAnimation(anim)
+        binding2.titleAlert.text = context.getString(title)
+        binding2.messageAlert.text = context.getString(message)
 
         when (actionCode) {
             2 -> {
-                binding.btnAction.visibility = View.VISIBLE
-                binding.btnAction.text =
+                binding2.btnAction.visibility = View.VISIBLE
+                binding2.btnAction.text =
                     context.getString(R.string.continue_action)
             }
 
             3 -> {
-                binding.btnAction.visibility = View.VISIBLE
-                binding.btnAction.text = context.getString(R.string.try_again)
+                binding2.btnAction.visibility = View.VISIBLE
+                binding2.btnAction.text = context.getString(R.string.try_again)
             }
 
             else -> {
-                binding.btnAction.visibility = View.GONE
+                binding2.btnAction.visibility = View.GONE
             }
         }
+    }
 
-        binding.btnAction.setOnClickListener {
+    fun show(action: () -> Unit) {
+        binding2.btnAction.setOnClickListener {
             dismiss()
-            handleNextAction.invoke()
+            action.invoke()
         }
+        show()
+    }
 
+    fun dismissAlert() {
+        dismiss()
+        cancel()
     }
 }

@@ -39,7 +39,7 @@ class RegisterBabyActivity : AppCompatActivity() {
     private var selectedGender: String? = null
     private var selectedBloodType: String? = null
     private lateinit var babyData: BabyModel
-    private lateinit var _dialog: DialogUi
+    private var _dialog: DialogUi? = null
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -201,7 +201,7 @@ class RegisterBabyActivity : AppCompatActivity() {
             if (formIsValid()) {
                 if (selectedImageUri != null) {
                     val storage = FirebaseStorageHelper()
-                    showAlertState(Constants.STATUS_LOADING)
+                    showAlertState(Constants.STATUS_LOADING) {}
                     babyData = BabyModel(
                         babyName = binding.txtName.text.toString(),
                         babyDateBirth = binding.txtBirthDate.text.toString(),
@@ -258,60 +258,64 @@ class RegisterBabyActivity : AppCompatActivity() {
     private fun register(data: BabyModel) {
         try {
             val userManager = BabiesManager()
-            userManager.saveBabyColl(data) {
-                if (it) {
-                    showAlertState(Constants.STATUS_SUCCESS)
+            userManager.saveBabyColl(data) { success ->
+                if (success) {
+                    showAlertState(Constants.STATUS_SUCCESS) {
+                        if (_dialog != null)
+                            _dialog?.dismissAlert()
+
+                        jumpNextActivity(HomeUserActivity(), true)
+                    }
                 } else {
-                    showAlertState(Constants.STATUS_ERROR)
+                    showAlertState(Constants.STATUS_ERROR) {
+                        if (_dialog != null)
+                            _dialog?.dismissAlert()
+                    }
+
                 }
+                if (_dialog != null)
+                    _dialog?.dismissAlert()
             }
         } catch (e: Exception) {
-            Log.e("error", "saveBabyColl2: ${e.message}")
+            if (_dialog != null)
+                _dialog?.dismissAlert()
         }
     }
 
-    private fun showAlertState(case: Int) {
+    private fun showAlertState(case: Int, action: () -> Unit) {
+        if (_dialog == null) {
+            _dialog = DialogUi(this)
+        }
+
         when (case) {
             Constants.STATUS_LOADING -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_loading,
                     R.string.loading_hint,
-                    R.string.message_process_information
-                ) {}
-                _dialog.show()
+                    R.string.message_process_information,
+                    actionCode = 1
+                )
             }
 
             Constants.STATUS_SUCCESS -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_success,
                     R.string.success_hint,
                     R.string.message_success,
-                    Constants.STATUS_SUCCESS
-                ) {
-                    _dialog.cancel()
-                    _dialog.dismiss()
-                    jumpNextActivity(HomeUserActivity(), true)
-                }
-                _dialog.show()
+                    actionCode = 1
+                )
             }
 
             Constants.STATUS_ERROR -> {
-                _dialog = DialogUi(
-                    this,
+                _dialog?.update(
                     R.raw.anim_error,
                     R.string.error_hint,
                     R.string.message_error,
-                    Constants.STATUS_ERROR
-                ) {
-                    _dialog.cancel()
-                    _dialog.dismiss()
-                }
-                _dialog.show()
+                    actionCode = 1
+                )
             }
-
         }
+        _dialog?.show(action)
     }
 
     private fun jumpNextActivity(activity: Activity, finish: Boolean = false) {
