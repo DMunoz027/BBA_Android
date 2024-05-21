@@ -29,16 +29,17 @@
             android:layout_width="@dimen/_60dp"
             android:layout_height="@dimen/_60dp"
             android:contentDescription="@string/photo_baby"
+            android:scaleType="centerCrop"
             android:src="@drawable/logo_app" />
 
         <TextView
-            android:textSize="@dimen/_18sp"
-            android:textStyle="bold"
             android:id="@+id/nameBaby"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10dp"
             android:layout_weight="1"
+            android:textSize="@dimen/_18sp"
+            android:textStyle="bold"
             tools:text="Rafael Jr" />
 
         <ImageView

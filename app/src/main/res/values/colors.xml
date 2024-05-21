@@ -14,4 +14,10 @@
     <color name="gray_400">#FFBDBDBD</color>
     <color name="gray_600">#FF757575</color>
 
+
+    <color name="timeline_marker">#FF5722</color> <!-- Color for timeline marker -->
+    <color name="card_background">#FFFFFF</color> <!-- Background color for CardView -->
+    <color name="text_primary">#212121</color> <!-- Primary text color -->
+    <color name="text_secondary">#757575</color> <!-- Secondary text color -->
+
 </resources>
