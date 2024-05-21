@@ -76,6 +76,41 @@ class UserManager {
             }
     }
 
+    fun updateUserColl(userId: String, update: UserModel, callback: (Boolean) -> Unit) {
+        val collRef = db.collection(nameColl)
+
+        collRef.whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val documentSnapshot = querySnapshot.documents[0]
+                    val documentRef = documentSnapshot.reference
+
+                    val updatedData = hashMapOf(
+                        "userName" to update.userName as Any?,
+                        "userDateBirth" to update.userDateBirth as Any?,
+                        "userBloodType" to update.userBloodType as Any?,
+                        "userAddress" to update.userAddress as Any?,
+                        "userPhone" to update.userPhone as Any?
+                    )
+
+                    documentRef.update(updatedData)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
+                } else {
+                    callback(false)
+                }
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+
     fun deleteOneUserColl(): Int {
         val resultRes = STATUS_LOADING
         return resultRes

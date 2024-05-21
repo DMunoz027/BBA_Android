@@ -4,7 +4,6 @@ import FirebaseStorageHelper
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -26,11 +25,9 @@ import com.doris.bba_android.databinding.ActivityRegisterBabyBinding
 import com.doris.bba_android.databinding.AlertMediaOrCameraBinding
 import com.doris.bba_android.model.BabyModel
 import com.doris.bba_android.network.users.BabiesManager
-import com.doris.bba_android.ui.auth.LoginActivity
 import com.doris.bba_android.ui.common.DialogUi
 import com.doris.bba_android.utils.Constants
 import com.doris.bba_android.utils.SharedPreferencesManager
-import java.util.UUID
 
 class RegisterBabyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBabyBinding
@@ -261,10 +258,12 @@ class RegisterBabyActivity : AppCompatActivity() {
             userManager.saveBabyColl(data) { success ->
                 if (success) {
                     showAlertState(Constants.STATUS_SUCCESS) {
-                        if (_dialog != null)
-                            _dialog?.dismissAlert()
-
-                        jumpNextActivity(HomeUserActivity(), true)
+                        _dialog?.dismissAlert()
+                        if (_dialog != null) {
+                            val intent = Intent(this, HomeUserActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
                 } else {
                     showAlertState(Constants.STATUS_ERROR) {
@@ -318,12 +317,6 @@ class RegisterBabyActivity : AppCompatActivity() {
         _dialog?.show(action)
     }
 
-    private fun jumpNextActivity(activity: Activity, finish: Boolean = false) {
-        val intent = Intent(this, activity::class.java)
-        startActivity(intent)
-        if (finish)
-            finish()
-    }
 
     private fun initAlertOptionForTakePhoto() {
         val alertDialogBuilder = AlertDialog.Builder(this)

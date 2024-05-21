@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.doris.bba_android.R
 import com.doris.bba_android.databinding.FragmentProfileBinding
@@ -83,6 +84,7 @@ class ProfileFragment : Fragment() {
                 if (it.isNotEmpty()) {
                     binding.rcvListSons.visibility = View.VISIBLE
                     binding.viewEmpty.visibility = View.GONE
+                    binding.btnAddBaby.visibility = View.VISIBLE
                     initialRcvBabies(it)
                 }
             }
@@ -105,6 +107,13 @@ class ProfileFragment : Fragment() {
         binding.btnRegisterBaby.setOnClickListener {
             val intent = Intent(requireContext(), RegisterBabyActivity::class.java)
             startActivity(intent)
+        }
+        binding.btnAddBaby.setOnClickListener {
+            val intent = Intent(requireContext(), RegisterBabyActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnEditMyInfo.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_notifications_to_editProfileFragment)
         }
     }
 

@@ -13,7 +13,6 @@ class DialogUi(
 ) : Dialog(context, R.style.TransparentDialog) {
     private lateinit var _binding: LayoutAlertLoadingBinding
     private lateinit var binding2: LayoutAlertLoadingBinding
-    private val binding get() = _binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +49,7 @@ class DialogUi(
             dismiss()
             action.invoke()
         }
+        setCancelable(false)
         show()
     }
 
@@ -57,4 +57,5 @@ class DialogUi(
         dismiss()
         cancel()
     }
+
 }
